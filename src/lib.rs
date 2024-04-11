@@ -169,17 +169,29 @@ mod tests {
 
     fn normalize_time(denom: &str, value: f64) -> f64 {
         if denom.to_string().starts_with("ps") {
-            value
+            value / 1e12
         } else if denom.to_string().starts_with("ns") {
-            value * 1e3
+            value / 1e9
         } else if denom.to_string().starts_with("µs") {
-            value * 1e6
+            value / 1e6
         } else if denom.to_string().starts_with("ms") {
-            value * 1e9
+            value / 1e3
         } else if denom.to_string().starts_with("s") {
-            value * 1e12
+            value
         } else {
-            panic!()
+            panic!("Unexpected denom for time: {}", denom)
+        }
+    }
+
+    fn normalize_amount(denom: &str, value: f64) -> f64 {
+        if denom.to_string().starts_with("G") {
+            value * 1e9
+        } else if denom.to_string().starts_with("M") {
+            value * 1e6
+        } else if denom.to_string().starts_with("K") {
+            value * 1e3
+        } else {
+            value
         }
     }
 
@@ -188,10 +200,37 @@ mod tests {
         for i in 0..a.len() {
             assert_ne!(a[i].abs(), 0.0, "left: {:?} !~= right: {:?}", a, b);
             assert!(
-                (a[i] - b[i]).abs() <= a[i].abs() * 1e-12,
+                (a[i] - b[i]).abs() < a[i].abs() * 1e-12,
                 "left: {:?} !~= right: {:?}",
                 a,
                 b
+            )
+        }
+    }
+
+    fn assert_nearly_inversion(a: Vec<f64>, b: Vec<f64>) {
+        assert_eq!(
+            a.len(),
+            b.len(),
+            "left: {:?} <not inversion> right: {:?}",
+            a,
+            b
+        );
+        for i in 0..a.len() {
+            assert_ne!(
+                a[i].abs(),
+                0.0,
+                "left: {:?} <not inversion> right: {:?}",
+                a,
+                b
+            );
+            assert!(
+                (a[i] * b[i] - 1f64).abs() < 0.075,
+                "left: {:?} <not inversion> right: {:?} (index: {}, abs(sub(1.0)): {})",
+                a,
+                b,
+                i,
+                (a[i] * b[i] - 1f64).abs(),
             )
         }
     }
@@ -217,11 +256,17 @@ mod tests {
 
         // compare value with intert throughput
         let mut values_by_default = data.values.clone();
+        let mut throughputs_by_default = data.values.clone();
         let mut inverted_throughputs = data.values.clone();
 
         let unit_by_default = default_measure
             .formatter()
             .scale_values(data.typical_value, &mut values_by_default);
+        let unit_by_default_throughputs = default_measure.formatter().scale_throughputs(
+            data.typical_value,
+            &data.throughput,
+            &mut throughputs_by_default,
+        );
         let unit_inverted_throughputs = our_measure.scale_throughputs(
             data.typical_value,
             &data.throughput,
@@ -232,11 +277,19 @@ mod tests {
             .iter()
             .map(|x| normalize_time(unit_by_default, *x) / amount as f64)
             .collect();
+        let normalized_default_throuputs: Vec<f64> = throughputs_by_default
+            .iter()
+            .map(|x| normalize_amount(unit_by_default_throughputs, *x))
+            .collect();
         let normalized_inverted_throuputs: Vec<f64> = inverted_throughputs
             .iter()
             .map(|x| normalize_time(unit_inverted_throughputs, *x))
             .collect();
 
-        assert_nearly_eq(expected_inverted_throuputs, normalized_inverted_throuputs);
+        assert_nearly_eq(
+            expected_inverted_throuputs,
+            normalized_inverted_throuputs.clone(),
+        );
+        assert_nearly_inversion(normalized_inverted_throuputs, normalized_default_throuputs);
     }
 }
