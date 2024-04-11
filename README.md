@@ -5,8 +5,8 @@ Custom [criterion](https://github.com/bheisler/criterion.rs) measurement to get 
 With deafult criterion config, result of benchmarks for throughput is printed like:
 
 ```
-time:   [1.5726 µs 1.5727 µs 1.5728 µs]
-thrpt:  [26.704 Melem/s 26.706 Melem/s 26.707 Melem/s]
+time:   [2.8617 µs 2.8728 µs 2.8850 µs]
+thrpt:  [14.558 Melem/s 14.620 Melem/s 14.677 Melem/s]
 ```
 
 Throughput is got in the format `[elements or bytes]/s`.
@@ -16,8 +16,8 @@ cost per 1 element or byte.
 Using this crate, we can got it in the format `[cost time]/[element or byte]` without post-processing calculations, like:
 
 ```
-time:   [1.5876 µs 1.5980 µs 1.6078 µs]
-thrpt:  [69.903 ns/elem 69.479 ns/elem 69.027 ns/elem]
+ime:   [2.8581 µs 2.8720 µs 2.8917 µs]
+thrpt:  [68.849 ns/elem 68.381 ns/elem 68.049 ns/elem]
 ```
 
 ## Usage
