@@ -24,7 +24,7 @@ thrpt:  [69.903 ns/elem 69.479 ns/elem 69.027 ns/elem]
 Specify `InvertedThroughput` as the measurement in your benchmarks.
 
 ### Example
-```
+```rust
 criterion_group!(
     name = Fum;
     // specify `InvertedThroughput` as measurement
