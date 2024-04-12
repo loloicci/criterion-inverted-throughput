@@ -1,9 +1,9 @@
 //! # Criterion Inverted Throughput
-//! Custom criterion measurement to get throughputs in the format `[elements or bytes]/[time]`.
+//! Custom [`criterion::measurement::Measurement`] to get throughputs in the format `[elements or bytes]/[time]`.
 //!
 //! ## Description
 //!
-//! With deafult criterion config, result of benchmarks for throughput is printed like:
+//! With deafult criterion config, result of [throughput measurement](https://bheisler.github.io/criterion.rs/book/user_guide/advanced_configuration.html#throughput-measurements) is printed like:
 //!
 //! ```text
 //! time:   [2.8617 µs 2.8728 µs 2.8850 µs]
@@ -14,7 +14,7 @@
 //! It is fine as a throughput, but sometimes we want to get how much time is
 //! cost per 1 element or byte.
 //!
-//! Using this crate, we can got it in the format `[cost time]/[element or byte]` without post-processing calculations, like:
+//! Using this crate, we can got it in the format `[time]/[element or byte]` without post-processing calculations, like:
 //!
 //! ```text
 //! time:   [2.8581 µs 2.8720 µs 2.8917 µs]
@@ -22,7 +22,7 @@
 //! ```
 //!
 //! ## Usage
-//! Specify `InvertedThroughput::new()` as your criterion measurement.
+//! Specify [`InvertedThroughput`] as your criterion measurement.
 //!
 //! ```
 //! use criterion::{criterion_group, criterion_main, Criterion, Throughput, measurement::Measurement};
