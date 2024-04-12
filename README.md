@@ -16,7 +16,7 @@ cost per 1 element or byte.
 Using this crate, we can got it in the format `[cost time]/[element or byte]` without post-processing calculations, like:
 
 ```
-ime:   [2.8581 µs 2.8720 µs 2.8917 µs]
+time:   [2.8581 µs 2.8720 µs 2.8917 µs]
 thrpt:  [68.849 ns/elem 68.381 ns/elem 68.049 ns/elem]
 ```
 
