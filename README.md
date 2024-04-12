@@ -1,5 +1,5 @@
 # Criterion Inverted Throughput
-Custom [criterion](https://github.com/bheisler/criterion.rs) measurement to get thropughts in the format `[time]/[elements or bytes]`
+Custom [criterion](https://github.com/bheisler/criterion.rs) measurement to get thropughts in the format `[time]/[element or byte]`
 
 ## Description
 With deafult criterion config, result of [throughput measurement](https://bheisler.github.io/criterion.rs/book/user_guide/advanced_configuration.html#throughput-measurements) is printed like:

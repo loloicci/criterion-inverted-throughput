@@ -1,5 +1,5 @@
 //! # Criterion Inverted Throughput
-//! Custom [`criterion::measurement::Measurement`] to get throughputs in the format `[time]/[elements or bytes]`.
+//! Custom [`criterion::measurement::Measurement`] to get throughputs in the format `[time]/[element or byte]`.
 //!
 //! ## Description
 //!
