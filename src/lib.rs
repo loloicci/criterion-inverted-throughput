@@ -1,40 +1,52 @@
 //! # Criterion Inverted Throughput
-//! Custom criterion measurement to get throughputs in the format `[elements or bytes]/[time]`
+//! Custom criterion measurement to get throughputs in the format `[elements or bytes]/[time]`.
+//!
+//! ## Description
+//!
+//! With deafult criterion config, result of benchmarks for throughput is printed like:
+//!
+//! ```text
+//! time:   [2.8617 µs 2.8728 µs 2.8850 µs]
+//! thrpt:  [14.558 Melem/s 14.620 Melem/s 14.677 Melem/s]
+//! ```
+//!
+//! Throughput is got in the format `[elements or bytes]/s`.
+//! It is fine as a throughput, but sometimes we want to get how much time is
+//! cost per 1 element or byte.
+//!
+//! Using this crate, we can got it in the format `[cost time]/[element or byte]` without post-processing calculations, like:
+//!
+//! ```text
+//! time:   [2.8581 µs 2.8720 µs 2.8917 µs]
+//! thrpt:  [68.849 ns/elem 68.381 ns/elem 68.049 ns/elem]
+//! ```
 //!
 //! ## Usage
 //! Specify `InvertedThroughput::new()` as your criterion measurement.
 //!
 //! ```
-//! use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput, measurement::Measurement};
+//! use criterion::{criterion_group, criterion_main, Criterion, Throughput, measurement::Measurement};
 //! use criterion_inverted_throughput::InvertedThroughput;
 //!
-//! fn sum(v: &[u64]) -> u64 {
-//!     let mut result = 0;
-//!     for x in v {
-//!         result += x;
-//!     }
-//!     result
-//! }
+//! fn bench_foo<M: Measurement>(c: &mut Criterion<M>) {
+//!     let mut g = c.benchmark_group("foo");
 //!
-//! fn bench_sum<M: Measurement>(c: &mut Criterion<M>) {
-//!     let mut g = c.benchmark_group("sum");
-//!     for i in 1..1024 {
-//!         let v = vec![42; i];
-//!         g.throughput(Throughput::Elements(v.len() as u64));
-//!         g.bench_with_input(BenchmarkId::new("len", i), &v, |b, v| {
-//!             b.iter(|| { let _ = sum(v);});
-//!         });
-//!     }
+//!     // tell size of input to enable throughput
+//!     g.throughput(Throughput::Elements(42u64));
+//!
+//!     // add benchmarks to the group here like
+//!     // g.bench_function("foo", |b| b.iter(|| do_something()));
+//!
 //!     g.finish();
 //! }
 //!
 //! criterion_group!(
-//!     name = Sum;
+//!     name = Foo;
 //!     // specify `InvertedThroughput` as measurement
 //!     config = Criterion::default().with_measurement(InvertedThroughput::new());
-//!     targets = bench_sum
+//!     targets = bench_foo
 //! );
-//! criterion_main!(Sum);
+//! criterion_main!(Foo);
 //! ```
 
 use criterion::measurement::{Measurement, ValueFormatter, WallTime};
@@ -47,6 +59,7 @@ use criterion::Throughput;
 pub struct InvertedThroughput(WallTime);
 
 impl InvertedThroughput {
+    /// Returns a new `InvertedThroughput`
     pub fn new() -> Self {
         InvertedThroughput(WallTime)
     }
