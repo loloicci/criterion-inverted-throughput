@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["loloicci <loloicci@loloicci.dev>"]
 license = "MIT"
-description = "Custom criterion measurement to get thropughts in the format [elements or bytes]/[time]"
+description = "Custom criterion measurement to get thropughts in the format [time]/[elements or bytes]"
 repository = "https://github.com/loloicci/criterion-inverted-throughput"
 readme = "README.md"
 
